@@ -1,0 +1,32 @@
+[project]
+name = "e-commerce"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "tatyana_goncharova",email = "genrik70@yandex.ru"}
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pytest (>=9.1.1,<10.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "black (>=26.5.1,<27.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)"
+]
+
+[tool.flake8]
+max-line-length = 120
