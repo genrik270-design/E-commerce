@@ -10,5 +10,3 @@ __pycache__/
 
 # Тестовое покрытие и кэш
 .pytest_cache/
-htmlcov/
-.coverage
