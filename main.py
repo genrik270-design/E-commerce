@@ -36,7 +36,7 @@ def load_data(file_path: str) -> list[Category]:
 
 # --- Пример использования в main.py ---
 if __name__ == "__main__":
-    # Укажите правильный путь к файлу products.json относительно корня проекта
+    # Указываем путь к файлу products.json относительно корня проекта
     loaded_categories = load_data("products.json")
 
     # Проверяем, что объекты создались корректно
@@ -47,12 +47,11 @@ if __name__ == "__main__":
     for cat in loaded_categories:
         print(f"\nКатегория: {cat.name} ({cat.description})")
         print("Товары:")
-        for prod in cat.products:
-            print(
-                f"  - {prod.name}: {prod.price} руб. (в наличии: {prod.quantity} шт.)"
-            )
+        print(cat.products)
 
 if __name__ == "__main__":
+    Category.category_count = 0
+    Category.product_count = 0
     product1 = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
     )
@@ -72,7 +71,7 @@ if __name__ == "__main__":
 
     print(category1.name == "Смартфоны")  # Выведет: True
     print(category1.description)
-    print(len(category1.products))  # Выведет: 3
+    print(category1.product_count)  # Выведет: 3
     print(category1.category_count)  # Выведет: 1
     print(category1.product_count)  # Выведет: 3
 
@@ -85,3 +84,14 @@ if __name__ == "__main__":
 
     print(Category.category_count)  # Выведет: 2
     print(Category.product_count)  # Выведет: 4
+
+    print(category1.products)
+
+    product5 = Product.new_product({
+        "name": "Sony PlayStation 5",
+        "description": "Игровая консоль",
+        "price": 60000.0,
+        "quantity": 3
+    })
+
+    print(f"{product5.name}, {product5.price} руб. Остаток: {product5.quantity} шт.")
