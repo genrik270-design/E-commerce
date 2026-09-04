@@ -5,8 +5,7 @@ def test_category_init(sample_category):
     """Проверка корректности инициализации объекта класса Category."""
     assert sample_category.name == "Смартфоны"
     assert sample_category.description == "Различные смартфоны"
-    assert len(sample_category.products) == 2
-
+    assert len(sample_category.products.split("\n")) == 3
 
 def test_category_counters(sample_category):
     """Проверка подсчета общего количества категорий и уникальных товаров."""

@@ -6,10 +6,31 @@ class Category:
     def __init__(self, name: str, description: str, products: list = None):
         self.name = name
         self.description = description
-        self.products = products if products is not None else []
+
+        # Переводим в приватный режим (два подчеркивания)
+        self.__products = []
 
         # При создании новой категории увеличиваем счетчик категорий на 1
         Category.category_count += 1
 
-        # Увеличиваем счетчик уникальных товаров на количество элементов в списке
-        Category.product_count += len(self.products)
+        # Если список продуктов передан, добавляем их через метод add_product
+        if products is not None:
+            for product in products:
+                self.add_product(product)
+
+    def __str__(self):
+        # Считаем сумму штук всех товаров в категории
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+
+    # Геттер для получения списка товаров в нужном формате
+    @property
+    def products(self) -> str:
+        # Превращаем каждый объект продукта в строку благодаря нашему Product.__str__
+        return "".join([f"{str(p)}\n" for p in self.__products])
+
+    # Метод для добавления товара (теперь он внутри класса)
+    def add_product(self, product):
+        self.__products.append(product)  # Добавление через append
+        Category.product_count += 1  # Увеличение счетчика
