@@ -18,10 +18,17 @@ class Category:
             for product in products:
                 self.add_product(product)
 
+    def __str__(self):
+        # Считаем сумму штук всех товаров в категории
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+
     # Геттер для получения списка товаров в нужном формате
     @property
     def products(self) -> str:
-        return "".join([f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт.\n" for p in self.__products])
+        # Превращаем каждый объект продукта в строку благодаря нашему Product.__str__
+        return "".join([f"{str(p)}\n" for p in self.__products])
 
     # Метод для добавления товара (теперь он внутри класса)
     def add_product(self, product):

@@ -5,6 +5,15 @@ class Product:
         self.__price = price  # Приватный атрибут для цены
         self.quantity = quantity  # Атрибут для количества
 
+
+    def __add__(self, other):
+        # Перемножаем цену на количество для каждого товара и складываем
+        return (self.price * self.quantity) + (other.price * other.quantity)
+
+    def __str__(self):
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+
     @classmethod
     def new_product(cls, product_data: dict):
         """Создаём объект класса из словаря."""
