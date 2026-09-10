@@ -23,7 +23,6 @@ class Category:
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
-
     # Геттер для получения списка товаров в нужном формате
     @property
     def products(self) -> str:
@@ -32,5 +31,13 @@ class Category:
 
     # Метод для добавления товара (теперь он внутри класса)
     def add_product(self, product):
-        self.__products.append(product)  # Добавление через append
+        """Добавляет продукт в категорию с проверкой его типа."""
+        from src.Product import Product  # Импортируем внутри метода во избежание циклического импорта
+
+        # Проверяем, является ли объект экземпляром класса Product или его наследников
+        if not isinstance(product, Product):
+            raise TypeError("Можно добавлять только объекты класса Product или его наследников!")
+        # Если проверка прошла, добавляем в список
+        self.__products.append(product)
+
         Category.product_count += 1  # Увеличение счетчика
