@@ -1,35 +1,32 @@
-class Product:
+from src.BaseProduct import BaseProduct
+from src.PrintMixin import PrintMixin
+
+
+class Product(PrintMixin, BaseProduct):
+    """Класс продукта, реализующий абстрактные методы."""
+
     def __init__(self, name: str, description: str, price: float, quantity: int):
-        self.name = name
-        self.description = description
-        self.__price = price  # Приватный атрибут для цены
-        self.quantity = quantity  # Атрибут для количества
-
-    def __add__(self, other):
-        # Проверяем, что оба объекта принадлежат к одному и тому же классу
-        if type(self) is not type(other):
-            raise TypeError("Нельзя складывать товары разных категорий!")
-
-        # Если классы одинаковые, выполняем привычное сложение (цена * количество)
-        return (self.price * self.quantity) + (other.price * other.quantity)
+        # Вызываем конструктор абстрактного класса
+        super().__init__(name, description, price, quantity)
 
     def __str__(self):
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+        return f"{self.name}, {self.price}руб. Остаток {self.quantity}штук"
 
     @classmethod
-    def new_product(cls, product_data: dict):
+    def create_product(cls, product_data: dict, *args, **kwargs):
         """Создаём объект класса из словаря."""
         return cls(
-            name=product_data.get("name"),
-            description=product_data.get("description"),
-            price=product_data.get("price"),
-            quantity=product_data.get("quantity")
+            name=product_data.get("name", "Без названия"),  # Если нет имени, будет "Без названия"
+            description=product_data.get("description", ""),  # Если нет описания, будет пустая строка
+            price=product_data.get("price", 0.0),  # Если нет цены, вернет 0.0
+            quantity=product_data.get("quantity", 0)  # Если нет количества, вернет 0
+
         )
 
     @property
     def price(self) -> float:
         """Геттер для чтения приватного атрибута цены."""
-        return self.__price
+        return self._price
 
     @price.setter
     def price(self, new_price: float) -> None:
@@ -41,7 +38,7 @@ class Product:
             return
 
         # Если цена снижается
-        if new_price < self.__price:
+        if new_price < self._price:
             # Проверяем, запущены ли тесты (чтобы input не вешал pytest)
             if "pytest" in sys.modules:
                 user_input = "y"
@@ -52,7 +49,18 @@ class Product:
                 print("Операция отменена")
                 return
 
-        self.__price = new_price
+        self._price = new_price
+
+    def __add__(self, other):
+        """Сложение двух продуктов.
+        Возвращает полную стоимость всех товаров на складе."""
+        # Сначала проверяем, что складываются товары одного класса
+        # (или унаследованные от Product, если это разрешено по ТЗ)
+        if type(self) is not type(other):
+            raise TypeError("Нельзя складывать товары разных классов")
+
+        # Формула: (Цена1 * Количество1) + (Цена2 * Количество2)
+        return (self.price * self.quantity) + (other.price * other.quantity)
 
 
 class Smartphone(Product):

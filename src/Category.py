@@ -1,4 +1,8 @@
-class Category:
+from src.BaseGroup import BaseGroup
+from src.PrintMixin import PrintMixin
+
+
+class Category(PrintMixin, BaseGroup):
     # Атрибуты класса для подсчета количества
     category_count = 0  # Общее количество категорий
     product_count = 0  # Количество уникальных товаров
@@ -17,6 +21,11 @@ class Category:
         if products is not None:
             for product in products:
                 self.add_product(product)
+        super().__init__()
+
+    def __len__(self) -> int:
+        """Возвращает количество продуктов в категории."""
+        return len(self.__products)
 
     def __str__(self):
         # Считаем сумму штук всех товаров в категории

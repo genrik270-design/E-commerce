@@ -1,5 +1,6 @@
 import pytest
 from src.Product import Product, Smartphone, LawnGrass
+from src.BaseProduct import BaseProduct
 
 
 def test_product_init(product_iphone):
@@ -20,7 +21,7 @@ def test_new_product():
         "quantity": 3
     }
 
-    product = Product.new_product(product_data)
+    product = Product.create_product(product_data)
 
     # Добавьте проверки (assert), если их еще нет
     assert product.name == "Sony PlayStation 5"
@@ -116,3 +117,41 @@ def test_products_add_type_error():
     # Проверяем, что генерируется ошибка TypeError при сложении смартфона и травы
     with pytest.raises(TypeError):
         phone + grass
+
+
+def test_base_product_abstract():
+    """Проверяем, что нельзя создать экземпляр абстрактного класса BaseProduct."""
+    with pytest.raises(TypeError):
+        BaseProduct("Тест", "Описание", 100, 1)
+
+
+def test_product_creation_with_mixin(capsys):
+    """Проверяем, что при создании продукта миксин выводит информацию в консоль."""
+    # Создаем продукт. capsys перехватывает все принты
+    Product("Sony PlayStation 5", "Игровая консоль", 60000.0, 3)
+
+    # Читаем вывод в консоль
+    captured = capsys.readouterr()
+
+    # Проверяем, что в выводе присутствует имя класса и ключевые параметры
+    assert "Product" in captured.out
+    assert "Sony PlayStation 5" in captured.out
+    assert "60000.0" in captured.out
+    assert "3" in captured.out
+
+
+def test_create_product_factory():
+    """Проверяем фабричный метод создания продукта из словаря."""
+    product_data = {
+        "name": "Sony PlayStation 5",
+        "description": "Игровая консоль, 825GB",
+        "price": 60000.0,
+        "quantity": 3
+    }
+
+    # ВАЖНО: Используйте то имя метода, которое у вас осталось в коде (create_product или new_product)
+    product = Product.create_product(product_data)
+
+    assert product.name == "Sony PlayStation 5"
+    assert product.price == 60000.0
+    assert product.quantity == 3
