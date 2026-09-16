@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from src.exceptions import ZeroQuantityError  # Импортируем нашу ошибку
 
 
 class BaseProduct(ABC):
@@ -8,6 +9,10 @@ class BaseProduct(ABC):
         self.name = name
         self.description = description
         self._price = price
+        # Выбрасываем наше кастомное исключение
+        if quantity == 0:
+            raise ZeroQuantityError()
+
         self.quantity = quantity
 
     @abstractmethod

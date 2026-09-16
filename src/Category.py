@@ -1,5 +1,6 @@
 from src.BaseGroup import BaseGroup
 from src.PrintMixin import PrintMixin
+from src.exceptions import ZeroQuantityError
 
 
 class Category(PrintMixin, BaseGroup):
@@ -38,15 +39,43 @@ class Category(PrintMixin, BaseGroup):
         # Превращаем каждый объект продукта в строку благодаря нашему Product.__str__
         return "".join([f"{str(p)}\n" for p in self.__products])
 
+    def average_price(self) -> float:
+        """Подсчитывает средний ценник всех товаров в категории.
+        С помощью исключений обрабатывает случай, когда в категории нет товаров.
+        """
+        try:
+            total_sum = sum(product.price for product in self.__products)
+            return total_sum / len(self.__products)
+        except ZeroDivisionError:
+            return 0.0
+
     # Метод для добавления товара (теперь он внутри класса)
     def add_product(self, product):
         """Добавляет продукт в категорию с проверкой его типа."""
         from src.Product import Product  # Импортируем внутри метода во избежание циклического импорта
 
-        # Проверяем, является ли объект экземпляром класса Product или его наследников
-        if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его наследников!")
-        # Если проверка прошла, добавляем в список
-        self.__products.append(product)
+        try:
+            # 1. Проверяем, является ли объект экземпляром класса Product или его наследников
+            if not isinstance(product, Product):
+                raise TypeError("Можно добавлять только объекты класса Product или его наследников!")
 
-        Category.product_count += 1  # Увеличение счетчика
+            # 2. Проверяем количество товара
+            if product.quantity == 0:
+                raise ZeroQuantityError()
+
+                # Если проверки прошли, добавляем в список
+            self.__products.append(product)
+            Category.product_count += 1
+
+        except (TypeError, ZeroQuantityError) as e:
+            # Отступ блока except должен быть ровно 4 пробела от левого края (на уровне с def)
+            print(f"Ошибка добавления: {e}")
+            raise
+
+        else:
+            # Отступ ровно 4 пробела от левого края
+            print(f"Товар '{product.name}' успешно добавлен.")
+
+        finally:
+            # Отступ ровно 4 пробела от левого края
+            print("Обработка добавления товара завершена.")

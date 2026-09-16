@@ -127,7 +127,7 @@ def test_base_product_abstract():
 
 def test_product_creation_with_mixin(capsys):
     """Проверяем, что при создании продукта миксин выводит информацию в консоль."""
-    # Создаем продукт. capsys перехватывает все принты
+    # Создаем продукт capsys перехватывает все принты
     Product("Sony PlayStation 5", "Игровая консоль", 60000.0, 3)
 
     # Читаем вывод в консоль
@@ -155,3 +155,9 @@ def test_create_product_factory():
     assert product.name == "Sony PlayStation 5"
     assert product.price == 60000.0
     assert product.quantity == 3
+
+
+def test_product_creation_with_zero_quantity_raises_error():
+    """Проверяем, что создание товара с нулевым количеством вызывает ValueError."""
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Тестовый смартфон", "Описание", 50000.0, 0)
